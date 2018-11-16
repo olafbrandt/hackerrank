@@ -1,11 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import pprint
 from collections import defaultdict
-
-import sys
-if sys.version_info[0] < 3:
-    raise Exception("Must be using Python 3")
 
 # read the dictionary file
 import os
@@ -16,20 +12,36 @@ with open(fname) as f:
 content = [x.strip() for x in content]
 
 # define the hash function
-def hash(w):
-	return (''.join(sorted(list(w.lower()))))
+def hashu(w):
+	return (''.join(sorted(set(w))))
 
-# build the anagram solving dicionary
-anagram_dict = defaultdict(list)
+def hash(w):
+	return (''.join(sorted(list(w))))
+
+# build the pangram solving dicionary
+pangram_dict = defaultdict(list)
 for w in content:
-	anagram_dict[hash(w)].append(w)
+	h = hashu(w)
+	if len(w) >= 4:
+		pangram_dict[h].append(w)
 
 #run the solving service
 try:
 	while True:
-		w = input('Anagram: ')
+		w = input('Pangram: ')
 		if len(w) < 1: break
-		print ('Matches:', anagram_dict.get(hash(w), '---'))
+		h = hashu(w)
+		print ('{} --> {}'.format(w, ','.join(h)))
+		pangrams = []
+		subpans = []
+		for e in pangram_dict.items():
+			if (set(e[0]) <= set(h)) and (w[0] in e[0]):
+				if (len(set(e[0])) >= len(h)):
+					pangrams.extend(e[1])
+				else:
+					subpans.extend(e[1])
+		print('Pangrams: {}'.format(sorted(pangrams)))
+		print('Others:   {}'.format(sorted(subpans)))
 except EOFError:
 	pass
 

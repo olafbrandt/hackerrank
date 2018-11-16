@@ -1,9 +1,12 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+
 import pprint
 from collections import defaultdict
 
 # read the dictionary file
-fname = 'words.txt'
+import os
+filedir = os.path.dirname(os.path.abspath(__file__))
+fname = filedir + '/' + 'words.txt'
 with open(fname) as f:
     content = f.readlines()
 content = [x.strip() for x in content]
@@ -18,7 +21,12 @@ for w in content:
 	anagram_dict[hash(w)].append(w)
 
 #run the solving service
-while True:
-	w = raw_input('Anagram: ')
-	if len(w) < 1: break
-	print 'Matches:', anagram_dict.get(hash(w), '---')
+try:
+	while True:
+		w = input('Anagram: ')
+		if len(w) < 1: break
+		print ('Matches:', anagram_dict.get(hash(w), '---'))
+except EOFError:
+	pass
+
+print()
